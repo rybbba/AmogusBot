@@ -19,7 +19,7 @@ def gen_basic(text: str, output_file: str, api_key: str) -> bool:
 
 
 def bass_line_freq(track: AudioSegment) -> int:
-    sample_track = list(track)
+    sample_track = list(track.get_array_of_samples())
 
     est_mean = np.mean(sample_track)
 
@@ -30,7 +30,7 @@ def bass_line_freq(track: AudioSegment) -> int:
 
 
 def attune_ogg(input_file: str) -> AudioSegment:
-    accentuate_db = 50
+    accentuate_db = 45
     octaves = -0.5
 
     sample = AudioSegment.from_ogg(input_file)
@@ -38,7 +38,7 @@ def attune_ogg(input_file: str) -> AudioSegment:
     new_sample_rate = int(sample.frame_rate * (2.0 ** octaves))
     sample = sample._spawn(sample.raw_data, overrides={"frame_rate": new_sample_rate})
 
-    filtered = sample.low_pass_filter(bass_line_freq(sample.get_array_of_samples()))
+    filtered = sample.low_pass_filter(bass_line_freq(sample))
     combined = sample.overlay(filtered + accentuate_db)
 
     return combined
