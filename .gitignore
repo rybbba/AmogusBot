@@ -11,3 +11,6 @@ venv.bak/
 
 # Temporary files
 temp_files/
+
+# Settings
+settings.conf
