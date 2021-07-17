@@ -44,7 +44,9 @@ def attune_ogg(input_file: str) -> AudioSegment:
     return combined
 
 
-def gen_amogus(text: str, amogus_file: str, voice_file: str, output_file: str, api_key: str) -> None:
+def gen_amogus(
+    text: str, amogus_file: str, voice_file: str, output_file: str, api_key: str
+) -> None:
     gen_basic(text, voice_file, api_key)
 
     audio_text = attune_ogg(voice_file)
