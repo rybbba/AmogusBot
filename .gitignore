@@ -14,3 +14,4 @@ temp_files/
 
 # Settings
 settings.conf
+*.json

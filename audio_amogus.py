@@ -1,20 +1,26 @@
-import requests
 from pydub import AudioSegment
 import numpy as np
 import math
 
+from google.cloud import texttospeech
 
-def gen_basic(text: str, output_file: str, api_key: str) -> bool:
-    url = "https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize"
 
-    headers = {"Authorization": "Api-Key " + api_key}
+def gen_basic(text: str, output_file: str, api_client: str) -> bool:
 
-    data = {"text": text, "lang": "ru-RU", "voice": "zahar", "speed": "0.7"}
+    synthesis_input = texttospeech.SynthesisInput(text=text)
+    voice = texttospeech.VoiceSelectionParams(
+        language_code="ru-RU", ssml_gender=texttospeech.SsmlVoiceGender.MALE
+    )
+    audio_config = texttospeech.AudioConfig(
+        audio_encoding=texttospeech.AudioEncoding.MP3
+    )
 
-    r = requests.post(url, headers=headers, data=data)
+    r = api_client.synthesize_speech(
+        input=synthesis_input, voice=voice, audio_config=audio_config
+    )
 
     with open(output_file, "wb") as file:
-        file.write(r.content)
+        file.write(r.audio_content)
     return True
 
 
@@ -29,11 +35,11 @@ def bass_line_freq(track: AudioSegment) -> int:
     return bass_factor
 
 
-def attune_ogg(input_file: str) -> AudioSegment:
+def attune_voice(input_file: str) -> AudioSegment:
     accentuate_db = 45
     octaves = -0.5
 
-    sample = AudioSegment.from_ogg(input_file)
+    sample = AudioSegment.from_mp3(input_file)
 
     new_sample_rate = int(sample.frame_rate * (2.0 ** octaves))
     sample = sample._spawn(sample.raw_data, overrides={"frame_rate": new_sample_rate})
@@ -49,7 +55,7 @@ def gen_amogus(
 ) -> None:
     gen_basic(text, voice_file, api_key)
 
-    audio_text = attune_ogg(voice_file)
+    audio_text = attune_voice(voice_file)
     audio_music = AudioSegment.from_mp3(amogus_file)
 
     res = audio_text + audio_music

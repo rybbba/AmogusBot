@@ -11,6 +11,9 @@ from telegram import (
 from telegram.ext import Updater, CommandHandler, InlineQueryHandler, CallbackContext
 from telegram.error import Unauthorized
 
+from google.oauth2 import service_account
+from google.cloud import texttospeech
+
 from audio_amogus import gen_amogus
 from conf_reader import read_conf
 
@@ -36,7 +39,7 @@ def inline_handler(update: Update, context: CallbackContext) -> None:
         context.bot_data["amogus_file"],
         context.bot_data["voice_file"],
         context.bot_data["output_file"],
-        context.bot_data["yandex_api_key"],
+        context.bot_data["google_client"],
     )
     with open(context.bot_data["output_file"], "rb") as audio_file:
         try:
@@ -79,10 +82,15 @@ if __name__ == "__main__":
     updater = Updater(token=telegram_token, use_context=True)
     dispatcher = updater.dispatcher
 
-    updater.dispatcher.bot_data["yandex_api_key"] = parser["keys"]["yandex_api_key"]
-    updater.dispatcher.bot_data["amogus_file"] = parser["paths"]["amogus_file"]
-    updater.dispatcher.bot_data["voice_file"] = parser["paths"]["voice_file"]
-    updater.dispatcher.bot_data["output_file"] = parser["paths"]["output_file"]
+    
+    google_client = texttospeech.TextToSpeechClient(
+        credentials=service_account.Credentials.from_service_account_file(parser["keys"]["google_credientals"])
+    )
+
+    dispatcher.bot_data["google_client"] = google_client
+    dispatcher.bot_data["amogus_file"] = parser["paths"]["amogus_file"]
+    dispatcher.bot_data["voice_file"] = parser["paths"]["voice_file"]
+    dispatcher.bot_data["output_file"] = parser["paths"]["output_file"]
 
     dispatcher.add_handler(CommandHandler("start", start))
 

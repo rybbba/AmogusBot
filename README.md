@@ -2,13 +2,13 @@
 Данный бот позволяет воспроизводить содержание относительно известного шуточного [видео](https://youtu.be/5DlROhT8NgU) с произвольным словом и в формате аудиозаписи в [Telegram](https://telegram.org/).
 
 ## Запуск
-Для запуска бота, необходимо получить API токены для Telegram бота и Yandex Cloud (используется Yandex SpeechKit, запросы платные).
+Для запуска бота, необходимо получить API токены для Telegram бота и Google Cloud (используется Google Cloud Text-to-Speech, запросы платные).
 
 В корне репозитория необходимо создать файл `settings.conf` со следующим содержанием:
 ```
 [keys]
-# Токен Yandex Cloud
-yandex_api_key = 
+# путь к полученному в Google Cloud json файлу с данными сервисного аккаунта
+google_credientals = 
 
 # Токен Telegram бота
 telegram_token = 
@@ -17,7 +17,7 @@ telegram_token =
 # Файл c заготовленной музыкой
 amogus_file = samples/amogus.mp3
 
-# Файл, в который записывается промежуточный результат работы Yandex SpeechKit
+# Файл, в который записывается промежуточный результат работы Text-to-Speech
 voice_file = temp_files/temp.ogg
 
 # Файл, в который записывается результат работы перед отправкой сообщения
