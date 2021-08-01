@@ -28,7 +28,7 @@ def start(update: Update, context: CallbackContext) -> None:
 
 def inline_handler(update: Update, context: CallbackContext) -> None:
     query = update.inline_query.query
-    if not re.match(r"^[+\s\w]{,20}ус$", query):
+    if not re.match(r"^[\s\w]{,20}ус$", query):
         return
 
     query = query.lower()

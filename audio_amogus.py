@@ -9,10 +9,12 @@ def gen_basic(text: str, output_file: str, api_client: str) -> bool:
 
     synthesis_input = texttospeech.SynthesisInput(text=text)
     voice = texttospeech.VoiceSelectionParams(
-        language_code="ru-RU", ssml_gender=texttospeech.SsmlVoiceGender.MALE
+        language_code="ru-RU",
+        ssml_gender=texttospeech.SsmlVoiceGender.MALE
     )
     audio_config = texttospeech.AudioConfig(
-        audio_encoding=texttospeech.AudioEncoding.MP3
+        audio_encoding=texttospeech.AudioEncoding.MP3,
+        speaking_rate=0.9
     )
 
     r = api_client.synthesize_speech(
@@ -37,7 +39,7 @@ def bass_line_freq(track: AudioSegment) -> int:
 
 def attune_voice(input_file: str) -> AudioSegment:
     accentuate_db = 45
-    octaves = -0.5
+    octaves = -1
 
     sample = AudioSegment.from_mp3(input_file)
 
